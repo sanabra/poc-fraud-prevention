@@ -1,0 +1,134 @@
+openapi: 3.0.1
+info:
+  title: Solicitacao Analise Fraude
+  description: Solicitacao Analise Fraude
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://localhost/v1
+  - url: http://localhost/v1
+tags:
+  - name: solicitacao
+    description: Solicitação de análise de fraudes
+paths:
+  /solicitacao:
+    post:
+      tags:
+        - solicitacao
+      summary: Cria nova solicitação de análise de fraudes
+      operationId: postSolicitacao
+      requestBody:
+        description: Solicitação com os dados a serem analisados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Solicitacao'
+        required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NumeroProtocolo'
+  /solicitacao/{numeroProtocolo}/decisao:
+    get:
+      tags:
+        - solicitacao
+      summary: Consulta a decisão da análise de fraudes
+      description: Consulta a decisão da análise de fraudes
+      operationId: getSolicitacaoStatus
+      parameters:
+        - name: numeroProtocolo
+          in: path
+          description: Número do protocolo
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Consulta realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+    post:
+      tags:
+        - solicitacao
+      summary: Define a decisão da análise de fraudes
+      description: Define a decisão da análise de fraudes
+      operationId: postSolicitacaoDecisao
+      parameters:
+        - name: numeroProtocolo
+          in: path
+          description: Número do protocolo
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Decisão da análise
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Decisao'
+        required: true
+      responses:
+        200:
+          description: Decisão aplicada com sucesso
+components:
+  schemas:
+    Solicitacao:
+      type: object
+      required:
+        - canal
+      properties:
+        canal:
+          type: string
+        produto:
+          type: string
+        chave:
+          type: string
+        dados:
+          $ref: '#/components/schemas/Dados'
+    Dados:
+      type: object
+      properties:
+        cpf:
+          type: string
+        nome:
+          type: string
+    NumeroProtocolo:
+      type: object
+      properties:
+        numeroProtocolo:
+          type: string
+    Status:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - PENDENTE
+            - EM_ANALISE
+            - CONCLUIDO
+        decisao:
+          type: string
+          enum:
+            - APROVADO
+            - REPROVADO
+    Decisao:
+      type: object
+      properties:
+        decisao:
+          type: string
+          enum:
+            - APROVADO
+            - REPROVADO
