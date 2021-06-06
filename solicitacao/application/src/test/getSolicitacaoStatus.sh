@@ -1,0 +1,1 @@
+curl --location --request GET 'http://localhost:8080/v1/solicitacao/'$1'/decisao'
